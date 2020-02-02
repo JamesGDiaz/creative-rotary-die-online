@@ -1,0 +1,65 @@
+.Container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: 2vmax;
+  margin-right: 2vmax;
+}
+
+.DragZone {
+  margin-left: 2vmax;
+  margin-right: 2vmax;
+  margin-top: 5vh;
+}
+
+.DragContainer {
+  flex: 1;
+  align-items: center;
+  padding: 60px;
+  font-size: 16pt;
+  border-width: 2px;
+  border-radius: 12px;
+  border-color: #8a8a8a;
+  border-style: dashed;
+  background-color: #eeeeee;
+  color: #afafaf;
+  outline: none;
+  transition: border 0.1s ease-in-out;
+}
+
+.DropZone {
+  color: #afafaf;
+}
+
+.humbsContainer {
+  display: "flex";
+  flex-direction: "row";
+  flex-wrap: "wrap";
+  margin-top: 16;
+  align-items: "center";
+}
+
+.thumb {
+  display: "inline-flex";
+  border-radius: 0;
+  border: "1px solid #eaeaea";
+  margin-bottom: 8;
+  margin-right: 8;
+  width: auto;
+  height: 100%;
+  padding: 4;
+  box-sizing: "border-box";
+}
+
+.thumbInner {
+  display: "flex";
+  min-width: 0;
+
+  overflow: "hidden";
+}
+
+.img {
+  max-width: auto;
+  height: 100%;
+  object-fit: contain;
+}

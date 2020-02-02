@@ -1,0 +1,17 @@
+.App {
+  display: block;
+  text-align: center;
+  background: #fafafa;
+  height: 100%;
+  min-height: 100%;
+}
+
+.Body {
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.Footer {
+  margin-top: auto;
+}
