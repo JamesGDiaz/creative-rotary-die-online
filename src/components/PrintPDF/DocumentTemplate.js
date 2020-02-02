@@ -197,25 +197,25 @@ export class DocumentTemplate extends React.Component {
               </Row>
               <Row>
                 <FieldContainer>
-                  <FieldName>CAVITIES ACROSS</FieldName>
-                  <FieldValue style={{ width: 50 }}>
-                    {this.state.gapAcross}
+                  <FieldName>CAV ACROSS</FieldName>
+                  <FieldValue style={{ width: 40 }}>
+                    {this.state.cavAcross}
                   </FieldValue>
                 </FieldContainer>
                 <FieldContainer>
-                  <FieldName>SPACE</FieldName>
+                  <FieldName>GAP ACROSS</FieldName>
                   <FieldValue>{this.state.gapAcross}</FieldValue>
                 </FieldContainer>
               </Row>
               <Row>
                 <FieldContainer>
-                  <FieldName>CAVITIES AROUND</FieldName>
-                  <FieldValue style={{ width: 50 }}>
+                  <FieldName>CAV AROUND</FieldName>
+                  <FieldValue style={{ width: 40 }}>
                     {this.state.cavAround}
                   </FieldValue>
                 </FieldContainer>
                 <FieldContainer>
-                  <FieldName>SPACE</FieldName>
+                  <FieldName>GAP AROUND</FieldName>
                   <FieldValue>{this.state.gapAround}</FieldValue>
                 </FieldContainer>
               </Row>
@@ -231,6 +231,9 @@ export class DocumentTemplate extends React.Component {
             </View>
           </Region>
           <Region style={{ height: "32%" }} debug={false} id="quoteData">
+            <View style={{
+              flex:1,
+              flexDirection:"column",alignItems:"flex-end", justifyContent:"flex-end"}}>
             <FieldContainer>
               <FieldName>MATERIAL</FieldName>
               <FieldValue>{this.state.material}</FieldValue>
@@ -239,6 +242,7 @@ export class DocumentTemplate extends React.Component {
               <FieldName>PRICE</FieldName>
               <FieldValue>{this.state.price}</FieldValue>
             </FieldContainer>
+              </View>
           </Region>
           <Region
             style={{ height: "25%", paddingTop: 10 }}

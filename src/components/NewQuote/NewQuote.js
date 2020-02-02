@@ -1,4 +1,4 @@
-import React, { Component, useState, useRef } from "react";
+import React, { Component} from "react";
 import zlib from "zlib";
 import { Card, Button, Form, Spinner, Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,8 +19,8 @@ import { Document, Page, pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 class Quote extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       WAIT: false,
       previewProps: undefined,
@@ -48,7 +48,7 @@ class Quote extends Component {
   };
 
   renderQueue = () => {
-    if (!this.state.intervalIsSet) {
+    /*if (!this.state.intervalIsSet) {
       setInterval(() => {
         this.setState({ intervalIsSet: true });
         if (
@@ -61,7 +61,7 @@ class Quote extends Component {
           });
         }
       }, 2000);
-    }
+    }*/
   };
 
   pdfPreview = () => {
@@ -94,7 +94,7 @@ class Quote extends Component {
                   ? values.gapAround + " " + values.unitGapAround
                   : "";
                 values.cornerRadius = values.cornerRadius
-                  ? values.gapAcross + " " + values.unitCornerRadius
+                  ? values.cornerRadius + " " + values.unitCornerRadius
                   : "";
                 values.size = values.size
                   ? values.size + " " + values.unitSize
