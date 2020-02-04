@@ -164,7 +164,7 @@ class Section1 extends Component {
                 isInvalid={!!this.props.errors.unitSize}
               >
                 <option>mm</option>
-                <option>inch</option>
+                <option>in</option>
               </FormControl>
             </InputGroup.Append>
           </InputGroup>
@@ -189,7 +189,7 @@ class Section1 extends Component {
                 isInvalid={!!this.props.errors.unitCornerRadius}
               >
                 <option>mm</option>
-                <option>inch</option>
+                <option>in</option>
               </FormControl>
             </InputGroup.Append>
           </InputGroup>
@@ -225,7 +225,7 @@ class Section1 extends Component {
                 isInvalid={!!this.props.errors.unitGapAcross}
               >
                 <option>mm</option>
-                <option>inch</option>
+                <option>in</option>
               </FormControl>
             </InputGroup.Append>
           </InputGroup>
@@ -261,7 +261,7 @@ class Section1 extends Component {
                 isInvalid={!!this.props.errors.unitGapAround}
               >
                 <option>mm</option>
-                <option>inch</option>
+                <option>in</option>
               </FormControl>
             </InputGroup.Append>
           </InputGroup>

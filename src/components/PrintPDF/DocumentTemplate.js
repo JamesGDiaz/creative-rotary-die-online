@@ -5,9 +5,11 @@ import {
   View,
   Document,
   Image,
-  StyleSheet
+  StyleSheet,
+  Svg
 } from "@react-pdf/renderer";
 import styled from "@react-pdf/styled-components";
+import SVGshape from "./SVGShape";
 //Font.registerHyphenationCallback(word => [word]);
 
 //Document
@@ -33,13 +35,17 @@ export class DocumentTemplate extends React.Component {
         clientKey: "",
         type: "",
         size: "",
+        unitSize: "",
         gapAcross: "",
+        unitGapAcross: "",
         gapAround: "",
+        unitGapAround: "",
         cavAcross: "",
         cavAround: "",
         cornerRadius: "",
+        unitCornerRadius: "",
         material: "",
-        price: "",
+        price: "$0.00",
         quoteString: "",
         qrCodeData: ""
       };
@@ -112,24 +118,16 @@ export class DocumentTemplate extends React.Component {
                 src={require("../../assets/images/CreativeRotary.png")}
                 style={{ marginTop: 10, width: 220, height: 120 }}
               />
-              <View
-                style={[
-                  styles.header,
-                  {
-                    justifyContent: "center",
-                    alignItems: "center"
-                  }
-                ]}
-              >
-                <StrongText style={{ marginBottom: 3 }}>
+              <View style={styles.header}>
+                <StrongText style={styles.headerItem}>
                   {this.state.customer}
                 </StrongText>
-                <Text style={{ marginBottom: 3 }}>
+                <Text style={styles.headerItem}>
                   {this.state.fabrication ? "P.O." : "QUOTE"}:{" "}
                   {this.state.quoteNumber}
                 </Text>
-                <RoundBox style={{ marginBottom: 3 }} />
-                <Text style={{ marginBottom: 3 }}>{this.state.state}</Text>
+                <RoundBox />
+                <Text style={styles.headerItem}>{this.state.state}</Text>
               </View>
             </View>
           </Region>
@@ -155,6 +153,12 @@ export class DocumentTemplate extends React.Component {
                   <FieldName>DATE</FieldName>
                   <FieldValue>{this.state.dateReceived}</FieldValue>
                 </FieldContainer>
+                <FieldContainer
+                  style={{ alignItems: "center", justifyContent: "center" }}
+                >
+                  <FieldName>CUSTOMER KEY:</FieldName>
+                  <StrongText>{this.state.clientKey}</StrongText>
+                </FieldContainer>
               </Row>
               <Row>
                 <FieldContainer>
@@ -177,7 +181,7 @@ export class DocumentTemplate extends React.Component {
                 <FieldContainer
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
-                  <FieldName>SHAPE</FieldName>
+                  <FieldName style={{ marginRight: "10pt" }}>SHAPE</FieldName>
                   <FieldValue style={styles.selectedShape}>
                     {this.state.type ? this.state.type.toUpperCase() : ""}
                   </FieldValue>
@@ -186,37 +190,41 @@ export class DocumentTemplate extends React.Component {
               <Row>
                 <FieldContainer>
                   <FieldName>SIZE</FieldName>
-                  <FieldValue>{this.state.size}</FieldValue>
+                  <FieldValue>
+                    {this.state.size + " " + this.state.unitSize}
+                  </FieldValue>
                 </FieldContainer>
                 <FieldContainer>
-                  <FieldName>CORNER RADIUS</FieldName>
-                  <FieldValue style={{ width: 50 }}>
-                    {this.state.cornerRadius}
+                  <FieldName>C.R.</FieldName>
+                  <FieldValue>
+                    {this.state.cornerRadius +
+                      " " +
+                      this.state.unitCornerRadius}
                   </FieldValue>
                 </FieldContainer>
               </Row>
               <Row>
                 <FieldContainer>
                   <FieldName>CAV ACROSS</FieldName>
-                  <FieldValue style={{ width: 40 }}>
-                    {this.state.cavAcross}
-                  </FieldValue>
+                  <FieldValue>{this.state.cavAcross}</FieldValue>
                 </FieldContainer>
                 <FieldContainer>
                   <FieldName>GAP ACROSS</FieldName>
-                  <FieldValue>{this.state.gapAcross}</FieldValue>
+                  <FieldValue>
+                    {this.state.gapAcross + " " + this.state.unitGapAcross}
+                  </FieldValue>
                 </FieldContainer>
               </Row>
               <Row>
                 <FieldContainer>
                   <FieldName>CAV AROUND</FieldName>
-                  <FieldValue style={{ width: 40 }}>
-                    {this.state.cavAround}
-                  </FieldValue>
+                  <FieldValue>{this.state.cavAround}</FieldValue>
                 </FieldContainer>
                 <FieldContainer>
                   <FieldName>GAP AROUND</FieldName>
-                  <FieldValue>{this.state.gapAround}</FieldValue>
+                  <FieldValue>
+                    {this.state.gapAround + " " + this.state.unitGapAround}
+                  </FieldValue>
                 </FieldContainer>
               </Row>
             </View>
@@ -230,19 +238,93 @@ export class DocumentTemplate extends React.Component {
               ) : null}
             </View>
           </Region>
-          <Region style={{ height: "32%" }} debug={false} id="quoteData">
-            <View style={{
-              flex:1,
-              flexDirection:"column",alignItems:"flex-end", justifyContent:"flex-end"}}>
-            <FieldContainer>
-              <FieldName>MATERIAL</FieldName>
-              <FieldValue>{this.state.material}</FieldValue>
-            </FieldContainer>
-            <FieldContainer>
-              <FieldName>PRICE</FieldName>
-              <FieldValue>{this.state.price}</FieldValue>
-            </FieldContainer>
+          <Region
+            style={{
+              flexDirection: "row",
+              height: "32%",
+              paddingRight: "24pt",
+              paddingLeft: "24pt"
+            }}
+            debug={false}
+          >
+            <View
+              style={{
+                flex: 0.25,
+                flexDirection: "column",
+                alignItems: "flex-end",
+                justifyContent: "flex-end"
+              }}
+              debug={false}
+            ></View>
+            <View
+              style={{
+                flex: 0.5,
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+              debug={false}
+            >
+              <SVGshape
+                {...{
+                  shape: this.state.type,
+                  size: this.state.size,
+                  unitSize: this.state.unitSize,
+                  cornerRadius: this.state.cornerRadius,
+                  unitCornerRadius: this.state.unitCornerRadius,
+                  cavAcross: this.state.cavAcross,
+                  cavAround: this.state.cavAround,
+                  gapAcross: this.state.gapAcross,
+                  unitGapAcross: this.state.unitGapAcross,
+                  gapAround: this.state.gapAround,
+                  unitGapAround: this.state.unitGapAround,
+                  teeth: this.state.teeth
+                }}
+              />
+            </View>
+            <View
+              style={{
+                flex: 0.25,
+                flexDirection: "column",
+                alignItems: "flex-start",
+                justifyContent: "flex-start"
+              }}
+              id="diagram"
+              debug={false}
+            >
+              <View style={{ width: "100%", flex: 0.9 }} debug={false}>
+                <Text style={{ fontSize: "11pt" }}>{this.state.material}</Text>
               </View>
+              <View
+                style={{
+                  flex: 0.15,
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+                debug={false}
+              >
+                <StrongText
+                  style={{
+                    width: "100%",
+                    textAlign: "center",
+                    fontSize: "16pt",
+                    marginBottom: "4pt"
+                  }}
+                >
+                  {this.state.price}
+                </StrongText>
+                <Text
+                  style={{
+                    width: "100%",
+                    textAlign: "center",
+                    fontSize: "8pt"
+                  }}
+                >
+                  DIE PRICE
+                  {"\n"}
+                  PLUS SHIPPING {"&"} TAX
+                </Text>
+              </View>
+            </View>
           </Region>
           <Region
             style={{ height: "25%", paddingTop: 10 }}
@@ -270,7 +352,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff"
   },
   header: {
-    fontSize: 16
+    fontSize: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 32
+  },
+  headerItem: {
+    marginBottom: 20
   },
   selectedShape: {
     fontSize: 13,
@@ -319,8 +407,8 @@ const FieldName = styled.Text`
 const FieldValue = styled.Text`
   font-size: 12pt;
   font-family: "Helvetica";
-  padding-left: 15pt;
-  padding-right: 15pt;
+  padding-left: 12pt;
+  padding-right: 12pt;
   border-bottom: 1pt solid #000000;
 `;
 /*const StrongField = styled.Text`

@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
+import Alert from "react-bootstrap/Alert";
 import { faFileDownload, faEdit } from "@fortawesome/free-solid-svg-icons";
 import zlib from "zlib";
 import QRCode from "qrcode";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DocumentTemplate } from "./DocumentTemplate";
-import ErrorAlert from "../ErrorAlert/ErrorAlert";
-import {fromIdToSchema} from "../../methods/SchemaToDict"
+import { fromIdToSchema } from "../../methods/SchemaToDict";
 
 class PrintPDF extends Component {
   constructor(props) {
@@ -43,27 +43,26 @@ class PrintPDF extends Component {
   };
 
   componentDidMount() {
-      let formString= this.state.dirtyFormString
-        .replace(/[-]/g, "+")
-        .replace(/[_]/g, "/")
-        .replace(/(- )/g, "")
-        .replace(/(-%20)/g, "")
-        .replace(/(-^[\n])/g, "");
-      zlib.gunzip(Buffer.from(formString, "base64"), (error, result) => {
-        if (error) {
-          this.setState({
-            loading: false,
-            error:
-              "There was an error generating this quote. Is the decoded data correct?"
-          });
-          console.error(error);
-          return;
-        }
-        console.log("Decompression succesful");
-        this.decompressionDidFinish(fromIdToSchema(result));
-      });
-    }
-  
+    let formString = this.state.dirtyFormString
+      .replace(/[-]/g, "+")
+      .replace(/[_]/g, "/")
+      .replace(/(- )/g, "")
+      .replace(/(-%20)/g, "")
+      .replace(/(-^[\n])/g, "");
+    zlib.gunzip(Buffer.from(formString, "base64"), (error, result) => {
+      if (error) {
+        this.setState({
+          loading: false,
+          error:
+            "There was an error generating this quote. Is the decoded data correct?"
+        });
+        console.error(error);
+        return;
+      }
+      console.log("Decompression succesful");
+      this.decompressionDidFinish(fromIdToSchema(result));
+    });
+  }
 
   render() {
     if (this.state.loading)
@@ -79,7 +78,7 @@ class PrintPDF extends Component {
     else if (this.state.error) {
       return (
         <div style={{ flex: 0.5, padding: "3vmin" }}>
-          <ErrorAlert text={this.state.error} />
+          <Alert variant={"danger"}>{this.state.error}</Alert>
         </div>
       );
     } else {
@@ -89,6 +88,7 @@ class PrintPDF extends Component {
       let DownloadLink = () => {
         return (
           <PDFDownloadLink
+            style={{ marginRight: "72px", marginLeft: "72px" }}
             document={MyDocument.render()}
             fileName={this.state.formObject.quoteNumber + ".pdf"}
           >
@@ -96,7 +96,7 @@ class PrintPDF extends Component {
               loading ? (
                 "Loading doc..."
               ) : (
-                <Button variant="outline-success" size="lg">
+                <Button variant="outline-success" size="lg" block>
                   <FontAwesomeIcon icon={faFileDownload} /> Download
                 </Button>
               )
@@ -115,7 +115,9 @@ class PrintPDF extends Component {
             marginTop: "5vh"
           }}
         >
-          {this.state.error ? <ErrorAlert text={this.state.error} /> : null}
+          {this.state.error ? (
+            <Alert variant={"danger"}>{this.state.error}</Alert>
+          ) : null}
           <DownloadLink />
           <PDFViewer
             style={{

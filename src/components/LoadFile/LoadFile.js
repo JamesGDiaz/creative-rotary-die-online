@@ -1,10 +1,10 @@
 import React, { Component, useEffect, useState } from "react";
-import ErrorAlert from "../ErrorAlert/ErrorAlert";
 import { useDropzone } from "react-dropzone";
 import styles from "./LoadFile.module.scss";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
+import Alert from "react-bootstrap/Alert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf, faHandPointRight } from "@fortawesome/free-solid-svg-icons";
 import jsQR from "jsqr";
@@ -82,7 +82,7 @@ const DragZone = props => {
   );
   return (
     <div className={styles.DragZone}>
-      {errors ? <ErrorAlert text={errors} /> : null}
+      {errors ? <Alert variant={"danger"}>errors</Alert> : null}
       <div>
         <section className={styles.DragContainer}>
           <div {...getRootProps({ className: "DropZone" })}>

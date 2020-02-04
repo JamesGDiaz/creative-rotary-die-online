@@ -1,6 +1,15 @@
-import React, { Component} from "react";
+import React, { Component } from "react";
 import zlib from "zlib";
-import { Card, Button, Form, Spinner, Row, Col } from "react-bootstrap";
+import {
+  Card,
+  Button,
+  Form,
+  Spinner,
+  Row,
+  Col,
+  Accordion,
+  Alert
+} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFilePdf,
@@ -11,7 +20,6 @@ import Section1 from "./Sections/Section1";
 import { Formik } from "formik";
 import newQuoteSchema from "./NewQuoteSchema";
 import styles from "./NewQuote.module.scss";
-import ErrorAlert from "../ErrorAlert/ErrorAlert";
 import { fromSchemaToId } from "../../methods/SchemaToDict";
 import { BlobProvider } from "@react-pdf/renderer";
 import DocumentTemplate from "../PrintPDF/DocumentTemplate";
@@ -33,15 +41,12 @@ class Quote extends Component {
     if (Object.getOwnPropertyNames(errors).length > 0) {
       return Object.getOwnPropertyNames(errors).map((value, index) => {
         return (
-          <ErrorAlert
-            text={`${value
-              .replace(/([A-Z])/g, " $1")
-              .replace(/^./, function(str) {
-                return str.toUpperCase();
-              })}
+          <Alert variant={"danger"} key={index}>
+            {`${value.replace(/([A-Z])/g, " $1").replace(/^./, function(str) {
+              return str.toUpperCase();
+            })}
           , ${errors[value]}`}
-            key={index}
-          />
+          </Alert>
         );
       });
     }
@@ -52,16 +57,16 @@ class Quote extends Component {
       setInterval(() => {
         this.setState({ intervalIsSet: true });
         if (
-          JSON.stringify(this.state.nextPreviewProps) !==
-          JSON.stringify(this.state.previewProps)
-        ) {
-          console.log("updating!");
-          this.setState({
-            previewProps: { ...this.state.nextPreviewProps }
-          });
-        }
-      }, 2000);
+      JSON.stringify(this.state.nextPreviewProps) !==
+      JSON.stringify(this.state.previewProps)
+    ) {
+      }, 1000);
+      }
     }*/
+    console.log("updating!");
+    this.setState({
+      previewProps: { ...this.state.nextPreviewProps }
+    });
   };
 
   pdfPreview = () => {
@@ -70,7 +75,7 @@ class Quote extends Component {
       <BlobProvider document={MyDocument.render()}>
         {({ blob, url, loading, error }) => (
           <div className={styles.PdfCanvas}>
-            <Document file={url} renderMode="canvas">
+            <Document file={url} renderMode={"canvas"}>
               <Page pageNumber={1} />
             </Document>
           </div>
@@ -83,26 +88,10 @@ class Quote extends Component {
     return (
       <div className={styles.NewQuote}>
         <Row>
-          <Col md>
+          <Col xs={{ span: 12, order: 2 }} lg={{ span: 6, order: 1 }}>
             <Formik
               validationSchema={newQuoteSchema}
               onSubmit={(values, actions) => {
-                values.gapAcross = values.gapAcross
-                  ? values.gapAcross + " " + values.unitGapAcross
-                  : "";
-                values.gapAround = values.gapAround
-                  ? values.gapAround + " " + values.unitGapAround
-                  : "";
-                values.cornerRadius = values.cornerRadius
-                  ? values.cornerRadius + " " + values.unitCornerRadius
-                  : "";
-                values.size = values.size
-                  ? values.size + " " + values.unitSize
-                  : "";
-                delete values.unitSize;
-                delete values.unitCornerRadius;
-                delete values.unitGapAcross;
-                delete values.unitGapAround;
                 let json = fromSchemaToId(JSON.stringify(values));
                 zlib.gzip(json, (error, result) => {
                   let compressedString = result
@@ -118,10 +107,10 @@ class Quote extends Component {
                 dateReceived: `${new Date().getMonth() +
                   1}/${new Date().getDate()}/${new Date().getFullYear()}`,
                 type: "Rectangular",
-                unitSize: "inch",
-                unitCornerRadius: "inch",
-                unitGapAcross: "inch",
-                unitGapAround: "inch"
+                unitSize: "in",
+                unitCornerRadius: "in",
+                unitGapAcross: "in",
+                unitGapAround: "in"
               }}
             >
               {({
@@ -200,13 +189,28 @@ class Quote extends Component {
               )}
             </Formik>
           </Col>
-          <Col md>
-            {/*<PDFViewer
-              style={{ width: "100%", height: "100%", minHeight: "500px" }}
-            >
-              <DocumentTemplate {...this.state.previewProps} />
-            </PDFViewer>*/}
-            {this.pdfPreview()}
+          <Col
+            xs={{ span: 12, order: 1 }}
+            lg={{ span: 6, order: 2 }}
+            style={{ marginBottom: "12px" }}
+          >
+            <Accordion defaultActiveKey="0">
+              {" "}
+              <Card style={{ borderRadius: ".25rem" }}>
+                <Accordion.Toggle
+                  as={Card.Header}
+                  eventKey="0"
+                  style={{ borderRadius: ".25rem" }}
+                >
+                  <FontAwesomeIcon icon={faFilePdf} /> Preview
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey="0">
+                  <Card.Body style={{ backgroundColor: "#535353" }}>
+                    {this.pdfPreview()}
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
           </Col>
         </Row>
       </div>

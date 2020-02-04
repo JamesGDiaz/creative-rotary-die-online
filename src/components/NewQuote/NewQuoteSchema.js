@@ -10,11 +10,16 @@ const newQuoteSchema = Yup.object().shape({
   dateReceived: Yup.date().required("this field is required"),
   state: Yup.string().max(18),
   machine: Yup.string().max(40),
-  teeth: Yup.number().max(999),
+  teeth: Yup.number().max(9999),
   gearPitch: Yup.string(),
   clientKey: Yup.string().max(60, "too long"),
   type: Yup.string(),
-  size: Yup.string(),
+  size: Yup.string()
+    .trim()
+    .matches(
+      /([0-9.]*)\s*(?:[xX]?)\s*([0-9.]*)/g,
+      'Unable to recognize the dimensions entered (e.g. "0.125 x 0.125" or "1.125")'
+    ),
   gapAcross: Yup.number("must be a number"),
   gapAround: Yup.number("must be a number"),
   cavAcross: Yup.number("must be a number"),

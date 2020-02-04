@@ -8,17 +8,15 @@ var dictionary = new Map([
   ["gearPitch", "~6"],
   ["clientKey", "~7"],
   ["type", "~8"],
-  ["size", "~9"],
-  ["gapAcross", "~A"],
-  ["gapAround", "~B"],
-  ["cavAcross", "~C"],
-  ["cavAround", "~D"],
-  ["cornerRadius", "~E"],
-  ["material", "~F"],
-  ["price", "~a"]
-  /**
-   * ...
-   */
+  ["sizeAcross", "~9"],
+  ["sizeAround", "~A"],
+  ["gapAcross", "~B"],
+  ["gapAround", "~C"],
+  ["cavAcross", "~D"],
+  ["cavAround", "~E"],
+  ["cornerRadius", "~F"],
+  ["material", "~G"],
+  ["price", "~H"]
 ]);
 
 export function fromSchemaToId(jsondata: string) {

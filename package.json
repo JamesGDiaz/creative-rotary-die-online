@@ -7,7 +7,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.12.0",
     "@fortawesome/react-fontawesome": "^0.1.8",
     "@mikecousins/react-pdf": "^5.1.0",
-    "@react-pdf/renderer": "^1.6.8",
+    "@react-pdf/renderer": "git://github.com/diegomura/react-pdf.git#v2",
     "@react-pdf/styled-components": "^1.4.0",
     "bootstrap": "^4.4.1",
     "formik": "^1.5.8",
