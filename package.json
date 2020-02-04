@@ -1,6 +1,7 @@
 {
   "name": "creative-rotary-die-online",
   "private": true,
+  "version": "3.0.0",
   "engines": {
     "node": ">=12.8.0"
   },
