@@ -1,6 +1,5 @@
 {
   "name": "creative-rotary-die-online",
-  "version": "3.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
