@@ -7,11 +7,12 @@ import { Formik } from 'formik';
 import styles from './NewQuote.module.scss';
 import { fromSchemaToId } from '../../methods/SchemaToDict';
 import { BlobProvider } from '@react-pdf/renderer';
+import DocumentTemplate from '../PrintPDF/DocumentTemplate';
 import { Document, Page, pdfjs } from 'react-pdf';
 import newQuoteSchema from './NewQuoteSchema';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-const DocumentTemplate = lazy(() => import('../PrintPDF/DocumentTemplate'));
+
 const Section1 = lazy(() => import('./Sections/Section1'));
 
 class Quote extends Component {
