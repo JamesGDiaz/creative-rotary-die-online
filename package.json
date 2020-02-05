@@ -10,7 +10,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.12.0",
     "@fortawesome/react-fontawesome": "^0.1.8",
     "@mikecousins/react-pdf": "^5.1.0",
-    "@react-pdf/renderer": "github:diegomura/react-pdf.git#v2",
+    "@react-pdf/renderer": "^2.0.0-beta.4",
     "@react-pdf/styled-components": "^1.4.0",
     "bootstrap": "^4.4.1",
     "formik": "^1.5.8",
@@ -30,8 +30,8 @@
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.0.1",
-    "yup": "^0.27.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "yup": "^0.27.0"
   },
   "scripts": {
     "start": "react-scripts start",
