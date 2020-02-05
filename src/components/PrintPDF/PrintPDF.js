@@ -1,14 +1,15 @@
-import React, { Component } from "react";
-import Button from "react-bootstrap/Button";
-import Spinner from "react-bootstrap/Spinner";
-import Alert from "react-bootstrap/Alert";
-import { faFileDownload, faEdit } from "@fortawesome/free-solid-svg-icons";
-import zlib from "zlib";
-import QRCode from "qrcode";
-import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DocumentTemplate } from "./DocumentTemplate";
-import { fromIdToSchema } from "../../methods/SchemaToDict";
+import React, { Component } from 'react';
+import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
+import Alert from 'react-bootstrap/Alert';
+import { faFileDownload, faEdit } from '@fortawesome/free-solid-svg-icons';
+import zlib from 'zlib';
+import QRCode from 'qrcode';
+import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fromIdToSchema } from '../../methods/SchemaToDict';
+import DocumentTemplate from './DocumentTemplate';
+//const DocumentTemplate = lazy(() => import('../PrintPDF/DocumentTemplate'));
 
 class PrintPDF extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class PrintPDF extends Component {
       loading: true,
       dirtyFormString: this.props.match.params.data,
       formObject: null,
-      error: ""
+      error: ''
     };
   }
 
@@ -29,7 +30,7 @@ class PrintPDF extends Component {
     QRCode.toDataURL(
       this.state.dirtyFormString,
       {
-        errorCorrectionLevel: "L"
+        errorCorrectionLevel: 'L'
       },
       (error, url) => {
         formObject.qrCodeData = url;
@@ -44,22 +45,21 @@ class PrintPDF extends Component {
 
   componentDidMount() {
     let formString = this.state.dirtyFormString
-      .replace(/[-]/g, "+")
-      .replace(/[_]/g, "/")
-      .replace(/(- )/g, "")
-      .replace(/(-%20)/g, "")
-      .replace(/(-^[\n])/g, "");
-    zlib.gunzip(Buffer.from(formString, "base64"), (error, result) => {
+      .replace(/[-]/g, '+')
+      .replace(/[_]/g, '/')
+      .replace(/(- )/g, '')
+      .replace(/(-%20)/g, '')
+      .replace(/(-^[\n])/g, '');
+    zlib.gunzip(Buffer.from(formString, 'base64'), (error, result) => {
       if (error) {
         this.setState({
           loading: false,
-          error:
-            "There was an error generating this quote. Is the decoded data correct?"
+          error: 'There was an error generating this quote. Is the decoded data correct?'
         });
         console.error(error);
         return;
       }
-      console.log("Decompression succesful");
+      console.log('Decompression succesful');
       this.decompressionDidFinish(fromIdToSchema(result));
     });
   }
@@ -67,18 +67,14 @@ class PrintPDF extends Component {
   render() {
     if (this.state.loading)
       return (
-        <div style={{ flex: 0.5, padding: "3vmin" }}>
-          <Spinner
-            style={{ alignSelf: "center" }}
-            variant="dark"
-            animation="border"
-          />
+        <div style={{ flex: 0.5, padding: '3vmin' }}>
+          <Spinner style={{ alignSelf: 'center' }} variant='dark' animation='border' />
         </div>
       );
     else if (this.state.error) {
       return (
-        <div style={{ flex: 0.5, padding: "3vmin" }}>
-          <Alert variant={"danger"}>{this.state.error}</Alert>
+        <div style={{ flex: 0.5, padding: '3vmin' }}>
+          <Alert variant={'danger'}>{this.state.error}</Alert>
         </div>
       );
     } else {
@@ -88,15 +84,15 @@ class PrintPDF extends Component {
       let DownloadLink = () => {
         return (
           <PDFDownloadLink
-            style={{ marginRight: "72px", marginLeft: "72px" }}
+            style={{ marginRight: '72px', marginLeft: '72px' }}
             document={MyDocument.render()}
-            fileName={this.state.formObject.quoteNumber + ".pdf"}
+            fileName={this.state.formObject.quoteNumber + '.pdf'}
           >
             {({ blob, url, loading, error }) =>
               loading ? (
-                "Loading doc..."
+                'Loading doc...'
               ) : (
-                <Button variant="outline-success" size="lg" block>
+                <Button variant='outline-success' size='lg' block>
                   <FontAwesomeIcon icon={faFileDownload} /> Download
                 </Button>
               )
@@ -108,47 +104,51 @@ class PrintPDF extends Component {
       return (
         <div
           style={{
-            display: "flex",
+            display: 'flex',
             flex: 1,
-            flexDirection: "column",
-            padding: "5px",
-            marginTop: "5vh"
+            flexDirection: 'column',
+            padding: '5px',
+            marginTop: '5vh'
           }}
         >
-          {this.state.error ? (
-            <Alert variant={"danger"}>{this.state.error}</Alert>
-          ) : null}
+          {this.state.error ? <Alert variant={'danger'}>{this.state.error}</Alert> : null}
           <DownloadLink />
           <PDFViewer
             style={{
               flex: 1,
-              marginLeft: "3vmin",
-              marginRight: "3vmin",
-              marginTop: "3vmin",
-              minHeight: "70vh",
-              maxHeight: "80vh"
+              marginLeft: '3vmin',
+              marginRight: '3vmin',
+              marginTop: '3vmin',
+              minHeight: '70vh',
+              maxHeight: '80vh'
             }}
           >
             <DocumentTemplate {...this.state.formObject} />
           </PDFViewer>
           <p
             style={{
-              marginBottom: "3vmin",
-              marginLeft: "3vmin",
-              fontSize: "12px",
-              fontStyle: "italic",
-              textAlign: "start"
+              marginBottom: '3vmin',
+              marginLeft: '3vmin',
+              fontSize: '12px',
+              fontStyle: 'italic',
+              textAlign: 'start'
             }}
           >
-            This preview might not reflect exactly how the actual document will
-            look like.
+            This preview might not reflect exactly how the actual document will look like.
           </p>
           <DownloadLink />
-          <div style={{ flexDirection: "row", marginTop: "12px" }}>
+          <div
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: '12px'
+            }}
+          >
             <div style={{ flex: 0.5 }}>
               <p>
-                You can recover this quote using this QRCode. Just scan it, and
-                enter the decoded data on this page:
+                You can recover this quote using this QRCode. Just scan it, and enter the decoded
+                data on this page:
                 <br />
                 <b>
                   <a
@@ -158,17 +158,17 @@ class PrintPDF extends Component {
               </p>
             </div>
             <div>
-              <img src={this.state.qrCodeURL} alt={"QR Code"} />
+              <img src={this.state.qrCodeURL} alt={'QR Code'} />
               <p
                 style={{
-                  marginLeft: "10vw",
-                  marginRight: "10vw",
-                  marginTop: "1vh",
-                  marginBottom: "1vh",
-                  fontSize: "9pt",
-                  fontStyle: "italic",
+                  marginLeft: '10vw',
+                  marginRight: '10vw',
+                  marginTop: '1vh',
+                  marginBottom: '1vh',
+                  fontSize: '9pt',
+                  fontStyle: 'italic',
                   fontWeight: 250,
-                  wordWrap: "break-word"
+                  wordWrap: 'break-word'
                 }}
               >
                 {this.state.dirtyFormString}

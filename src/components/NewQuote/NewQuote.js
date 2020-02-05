@@ -1,30 +1,18 @@
-import React, { Component } from "react";
-import zlib from "zlib";
-import {
-  Card,
-  Button,
-  Form,
-  Spinner,
-  Row,
-  Col,
-  Accordion,
-  Alert
-} from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFilePdf,
-  faHandPointRight,
-  faInfoCircle
-} from "@fortawesome/free-solid-svg-icons";
-import Section1 from "./Sections/Section1";
-import { Formik } from "formik";
-import newQuoteSchema from "./NewQuoteSchema";
-import styles from "./NewQuote.module.scss";
-import { fromSchemaToId } from "../../methods/SchemaToDict";
-import { BlobProvider } from "@react-pdf/renderer";
-import DocumentTemplate from "../PrintPDF/DocumentTemplate";
-import { Document, Page, pdfjs } from "react-pdf";
+import React, { Component, Suspense, lazy } from 'react';
+import zlib from 'zlib';
+import { Card, Button, Form, Spinner, Row, Col, Accordion, Alert } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilePdf, faHandPointRight, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { Formik } from 'formik';
+import styles from './NewQuote.module.scss';
+import { fromSchemaToId } from '../../methods/SchemaToDict';
+import { BlobProvider } from '@react-pdf/renderer';
+import { Document, Page, pdfjs } from 'react-pdf';
+import newQuoteSchema from './NewQuoteSchema';
+
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+const DocumentTemplate = lazy(() => import('../PrintPDF/DocumentTemplate'));
+const Section1 = lazy(() => import('./Sections/Section1'));
 
 class Quote extends Component {
   constructor(props) {
@@ -41,8 +29,8 @@ class Quote extends Component {
     if (Object.getOwnPropertyNames(errors).length > 0) {
       return Object.getOwnPropertyNames(errors).map((value, index) => {
         return (
-          <Alert variant={"danger"} key={index}>
-            {`${value.replace(/([A-Z])/g, " $1").replace(/^./, function(str) {
+          <Alert variant={'danger'} key={index}>
+            {`${value.replace(/([A-Z])/g, ' $1').replace(/^./, function(str) {
               return str.toUpperCase();
             })}
           , ${errors[value]}`}
@@ -63,7 +51,7 @@ class Quote extends Component {
       }, 1000);
       }
     }*/
-    console.log("updating!");
+    console.log('updating!');
     this.setState({
       previewProps: { ...this.state.nextPreviewProps }
     });
@@ -75,7 +63,7 @@ class Quote extends Component {
       <BlobProvider document={MyDocument.render()}>
         {({ blob, url, loading, error }) => (
           <div className={styles.PdfCanvas}>
-            <Document file={url} renderMode={"canvas"}>
+            <Document file={url} renderMode={'canvas'}>
               <Page pageNumber={1} />
             </Document>
           </div>
@@ -87,132 +75,130 @@ class Quote extends Component {
   render() {
     return (
       <div className={styles.NewQuote}>
-        <Row>
-          <Col xs={{ span: 12, order: 2 }} lg={{ span: 6, order: 1 }}>
-            <Formik
-              validationSchema={newQuoteSchema}
-              onSubmit={(values, actions) => {
-                let json = fromSchemaToId(JSON.stringify(values));
-                zlib.gzip(json, (error, result) => {
-                  let compressedString = result
-                    .toString("base64")
-                    .replace(/[+]/g, "-")
-                    .replace(/[/]/g, "_");
-                  console.log("done");
-                  actions.setSubmitting(false);
-                  this.props.history.push(`print/${compressedString}`);
-                });
-              }}
-              initialValues={{
-                dateReceived: `${new Date().getMonth() +
-                  1}/${new Date().getDate()}/${new Date().getFullYear()}`,
-                type: "Rectangular",
-                unitSize: "in",
-                unitCornerRadius: "in",
-                unitGapAcross: "in",
-                unitGapAround: "in"
-              }}
+        <Suspense fallback={<div>Loading...</div>}>
+          <Row>
+            <Col xs={{ span: 12, order: 2 }} lg={{ span: 6, order: 1 }}>
+              <Formik
+                validationSchema={newQuoteSchema}
+                onSubmit={(values, actions) => {
+                  let json = fromSchemaToId(JSON.stringify(values));
+                  zlib.gzip(json, (error, result) => {
+                    let compressedString = result
+                      .toString('base64')
+                      .replace(/[+]/g, '-')
+                      .replace(/[/]/g, '_');
+                    console.log('done');
+                    actions.setSubmitting(false);
+                    this.props.history.push(`print/${compressedString}`);
+                  });
+                }}
+                initialValues={{
+                  dateReceived: `${new Date().getMonth() +
+                    1}/${new Date().getDate()}/${new Date().getFullYear()}`,
+                  type: 'Rectangular',
+                  unitSize: 'in',
+                  unitCornerRadius: 'in',
+                  unitGapAcross: 'in',
+                  unitGapAround: 'in'
+                }}
+              >
+                {({
+                  handleSubmit,
+                  handleChange,
+                  values,
+                  touched,
+                  isValid,
+                  errors,
+                  isSubmitting
+                }) => (
+                  <Form noValidate onSubmit={handleSubmit}>
+                    <Card>
+                      <Card.Header>
+                        <FontAwesomeIcon icon={faInfoCircle} /> Order Data
+                      </Card.Header>
+                      <Card.Body>
+                        <div>{this.listErrors(errors)}</div>
+                        <Button
+                          className={styles.Button}
+                          type='submit'
+                          variant='outline-primary'
+                          size='lg'
+                          disabled={isSubmitting}
+                        >
+                          {!isSubmitting ? (
+                            <div>
+                              Create File <FontAwesomeIcon icon={faHandPointRight} />{' '}
+                              <FontAwesomeIcon icon={faFilePdf} />
+                            </div>
+                          ) : (
+                            <div>
+                              Creating... <Spinner animation='border' variant='primary' />
+                            </div>
+                          )}
+                        </Button>
+                        <Section1
+                          handleChange={e => {
+                            e.persist();
+                            handleChange(e);
+                            values[e.target.name] = e.target.value;
+                            this.setState({ nextPreviewProps: values }, () => {
+                              this.renderQueue();
+                            });
+                          }}
+                          values={values}
+                          touched={touched}
+                          isValid={isValid}
+                          errors={errors}
+                        />
+                        <Button
+                          className={styles.Button}
+                          type='submit'
+                          variant='outline-primary'
+                          size='lg'
+                          disabled={isSubmitting}
+                        >
+                          {!isSubmitting ? (
+                            <div>
+                              Create File <FontAwesomeIcon icon={faHandPointRight} />{' '}
+                              <FontAwesomeIcon icon={faFilePdf} />
+                            </div>
+                          ) : (
+                            <div>
+                              Creating... <Spinner animation='border' variant='primary' />
+                            </div>
+                          )}
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  </Form>
+                )}
+              </Formik>
+            </Col>
+            <Col
+              xs={{ span: 12, order: 1 }}
+              lg={{ span: 6, order: 2 }}
+              style={{ marginBottom: '12px' }}
             >
-              {({
-                handleSubmit,
-                handleChange,
-                values,
-                touched,
-                isValid,
-                errors,
-                isSubmitting
-              }) => (
-                <Form noValidate onSubmit={handleSubmit}>
-                  <Card>
-                    <Card.Header>
-                      <FontAwesomeIcon icon={faInfoCircle} /> Order Data
-                    </Card.Header>
-                    <Card.Body>
-                      <div>{this.listErrors(errors)}</div>
-                      <Button
-                        className={styles.Button}
-                        type="submit"
-                        variant="outline-primary"
-                        size="lg"
-                        disabled={isSubmitting}
-                      >
-                        {!isSubmitting ? (
-                          <div>
-                            Create File{" "}
-                            <FontAwesomeIcon icon={faHandPointRight} />{" "}
-                            <FontAwesomeIcon icon={faFilePdf} />
-                          </div>
-                        ) : (
-                          <div>
-                            Creating...{" "}
-                            <Spinner animation="border" variant="primary" />
-                          </div>
-                        )}
-                      </Button>
-                      <Section1
-                        handleChange={e => {
-                          e.persist();
-                          handleChange(e);
-                          values[e.target.name] = e.target.value;
-                          this.setState({ nextPreviewProps: values }, () => {
-                            this.renderQueue();
-                          });
-                        }}
-                        values={values}
-                        touched={touched}
-                        isValid={isValid}
-                        errors={errors}
-                      />
-                      <Button
-                        className={styles.Button}
-                        type="submit"
-                        variant="outline-primary"
-                        size="lg"
-                        disabled={isSubmitting}
-                      >
-                        {!isSubmitting ? (
-                          <div>
-                            Create File{" "}
-                            <FontAwesomeIcon icon={faHandPointRight} />{" "}
-                            <FontAwesomeIcon icon={faFilePdf} />
-                          </div>
-                        ) : (
-                          <div>
-                            Creating...{" "}
-                            <Spinner animation="border" variant="primary" />
-                          </div>
-                        )}
-                      </Button>
+              <Accordion defaultActiveKey='0'>
+                {' '}
+                <Card style={{ borderRadius: '.25rem' }}>
+                  <Accordion.Toggle
+                    as={Card.Header}
+                    eventKey='0'
+                    style={{ borderRadius: '.25rem' }}
+                  >
+                    <FontAwesomeIcon icon={faFilePdf} /> Preview
+                  </Accordion.Toggle>
+                  <Accordion.Collapse eventKey='0'>
+                    <Card.Body style={{ backgroundColor: '#535353' }}>
+                      {this.pdfPreview()}
                     </Card.Body>
-                  </Card>
-                </Form>
-              )}
-            </Formik>
-          </Col>
-          <Col
-            xs={{ span: 12, order: 1 }}
-            lg={{ span: 6, order: 2 }}
-            style={{ marginBottom: "12px" }}
-          >
-            <Accordion defaultActiveKey="0">
-              {" "}
-              <Card style={{ borderRadius: ".25rem" }}>
-                <Accordion.Toggle
-                  as={Card.Header}
-                  eventKey="0"
-                  style={{ borderRadius: ".25rem" }}
-                >
-                  <FontAwesomeIcon icon={faFilePdf} /> Preview
-                </Accordion.Toggle>
-                <Accordion.Collapse eventKey="0">
-                  <Card.Body style={{ backgroundColor: "#535353" }}>
-                    {this.pdfPreview()}
-                  </Card.Body>
-                </Accordion.Collapse>
-              </Card>
-            </Accordion>
-          </Col>
-        </Row>
+                  </Accordion.Collapse>
+                </Card>
+              </Accordion>
+            </Col>
+          </Row>
+        </Suspense>
       </div>
     );
   }

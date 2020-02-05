@@ -1,5 +1,5 @@
-import React from "react";
-import { Svg, Circle, Rect } from "@react-pdf/renderer";
+import React from 'react';
+import { Svg, Circle, Rect } from '@react-pdf/renderer';
 
 /**
  *
@@ -54,9 +54,9 @@ function SVGShape(props) {
             height={sizeAround * scale}
             rx={cornerRadius * scale}
             ry={cornerRadius * scale}
-            stroke="black"
-            stroke-width="0.35"
-            fill-opacity="0"
+            stroke='black'
+            stroke-width='0.35'
+            fill-opacity='0'
             key={i * cavAcross + j}
           />
         );
@@ -64,20 +64,13 @@ function SVGShape(props) {
       }
     }
     return (
-      <Svg width={pageWidth * scale} height="265" debug={false}>
+      <Svg width={pageWidth * scale} height='265' debug={false}>
         {shapes}
       </Svg>
     );
   };
 
-  const drawCircle = (
-    diameter,
-    cavAcross,
-    cavAround,
-    gapAcross,
-    gapAround,
-    teeth
-  ) => {
+  const drawCircle = (diameter, cavAcross, cavAround, gapAcross, gapAround, teeth) => {
     const radius = diameter / 2;
     let totalAcross = (diameter + gapAcross) * cavAcross - gapAcross;
     let totalAround = (diameter + gapAround) * cavAround;
@@ -100,21 +93,17 @@ function SVGShape(props) {
     });
     for (i = 0; i < cavAround; i++) {
       for (j = 0; j < cavAcross; j++) {
-        let cx =
-          (pageWidth - totalAcross) / 2 + (diameter + gapAcross) * j + radius;
-        let cy =
-          (pageHeight - totalAround) / 2 +
-          (diameter + gapAround) * i +
-          diameter;
+        let cx = (pageWidth - totalAcross) / 2 + (diameter + gapAcross) * j + radius;
+        let cy = (pageHeight - totalAround) / 2 + (diameter + gapAround) * i + diameter;
         scale = 200 / pageHeight; //265
         let circle = (
           <Circle
             cx={cx * scale}
             cy={cy * scale}
             r={radius * scale}
-            stroke="black"
-            stroke-width="0.2"
-            fill-opacity="0"
+            stroke='black'
+            stroke-width='0.2'
+            fill-opacity='0'
             key={i * cavAcross + j}
           />
         );
@@ -122,69 +111,69 @@ function SVGShape(props) {
       }
     }
     return (
-      <Svg width={pageWidth * scale} height="265">
+      <Svg width={pageWidth * scale} height='265'>
         {shapes}
       </Svg>
     );
   };
 
   switch (props.shape) {
-    case "Rectangular":
+    case 'Rectangular':
       try {
         console.log(
           props.size
             .trim()
-            .replace(" ", "")
+            .replace(' ', '')
             .match(/([0-9.]*)/g)
             .filter(el => {
-              return el != "";
+              return el !== '';
             })
         );
         let sizeAcross = props.size
           .trim()
-          .replace(" ", "")
+          .replace(' ', '')
           .match(/([0-9.]*)/g)
           .filter(el => {
-            return el != "";
+            return el !== '';
           })[0];
         let sizeAround = props.size
           .trim()
-          .replace(" ", "")
+          .replace(' ', '')
           .match(/([0-9.]*)/g)
           .filter(el => {
-            return el != "";
+            return el !== '';
           })[1];
         return drawRectangle(
-          convertTo("in", sizeAcross + props.unitSize),
-          convertTo("in", sizeAround + props.unitSize),
+          convertTo('in', sizeAcross + props.unitSize),
+          convertTo('in', sizeAround + props.unitSize),
           parseInt(props.cavAcross),
           parseInt(props.cavAround),
-          convertTo("in", props.gapAcross + props.unitGapAcross),
-          convertTo("in", props.gapAround + props.unitGapAround),
-          convertTo("in", props.cornerRadius + props.unitCornerRadius),
+          convertTo('in', props.gapAcross + props.unitGapAcross),
+          convertTo('in', props.gapAround + props.unitGapAround),
+          convertTo('in', props.cornerRadius + props.unitCornerRadius),
           parseInt(props.teeth)
         );
       } catch (e) {
-        console.log("failed");
+        console.log('failed');
         console.log(e);
         return null;
       }
 
-    case "Circular":
+    case 'Circular':
       try {
         let radius = props.size
           .trim()
-          .replace(" ", "")
+          .replace(' ', '')
           .match(/([0-9.]*)/g)
           .filter(el => {
-            return el != "";
+            return el !== '';
           })[0];
         return drawCircle(
-          convertTo("in", radius + props.unitSize),
+          convertTo('in', radius + props.unitSize),
           parseInt(props.cavAcross),
           parseInt(props.cavAround),
-          convertTo("in", props.gapAcross + props.unitGapAcross),
-          convertTo("in", props.gapAround + props.unitGapAround),
+          convertTo('in', props.gapAcross + props.unitGapAcross),
+          convertTo('in', props.gapAround + props.unitGapAround),
           parseInt(props.teeth)
         );
       } catch (e) {
@@ -221,9 +210,9 @@ const convertTo = (unit, dim) => {
   dim = parseUnits(dim);
   if (dim.unit === unit) {
     return dim.mag;
-  } else if (unit === "mm") {
+  } else if (unit === 'mm') {
     return dim.mag * 25.4;
-  } else if (unit === "in") {
+  } else if (unit === 'in') {
     return dim.mag / 25.4;
   }
 };

@@ -29,9 +29,7 @@
     "react-scripts": "3.0.1",
     "yup": "^0.27.0"
   },
-  "devDependencies": {
-    "typescript": "^3.7.5"
-  },
+  "devDependencies": {},
   "scripts": {
     "start": "GENERATE_SOURCEMAP=false react-scripts --max-old-space-size=460 start",
     "build": "GENERATE_SOURCEMAP=false react-scripts --max-old-space-size=460 build",
