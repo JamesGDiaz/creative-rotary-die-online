@@ -13,7 +13,7 @@
     "@react-pdf/styled-components": "^1.4.0",
     "bootstrap": "^4.4.1",
     "formik": "^1.5.8",
-    "get-image-data": "^4.1.0",
+    "get-image-data": "^5.0.0",
     "jquery": "^3.4.1",
     "jsqr": "^1.2.0",
     "node-sass": "^4.13.1",
